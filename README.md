@@ -1,4 +1,4 @@
-# Swarm Controller
+# Patroni Notifier
 
 ![](https://github.com/jaredvacanti/patroni-notifier/workflows/Publish%20to%20PyPI/badge.svg)
 ![PyPI](https://img.shields.io/pypi/v/patroni-notifier?style=flat-square)
