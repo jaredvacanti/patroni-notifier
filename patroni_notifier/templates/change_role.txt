@@ -1,0 +1,3 @@
+The cluster 'pg-cluster' has had a role change.
+
+{{ url }}

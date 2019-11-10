@@ -1,0 +1,26 @@
+# Unit test / coverage reports
+.tox/
+.coverage
+.coverage.*
+.cache
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+.env
+.venv
+env/
+venv/
+
+.vscode/
+
+*.pyc 
+__pycache__
+
+.DS_Store
+
+*.egg-info
+
+_build
+dist
