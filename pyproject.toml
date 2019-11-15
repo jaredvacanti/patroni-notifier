@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "patroni-notifier"
-version = "0.0.1"
+version = "0.0.2"
 description = "Patoni notification system using jinja2 templates"
 authors = ["Jared Vacanti <jaredvacanti@gmail.com>"]
 license = "MIT"
@@ -12,12 +12,13 @@ homepage = "https://github.com/jaredvacanti/patroni-notifier"
 keywords = ['patroni', 'patroni-extension', 'ses', 'email', 'patroni-notifier']
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6"
 click = "^7.0"
 boto3 = "^1.10.12"
 requests = "^2.22.0"
 python-consul = "^1.1.0"
 jinja2 = "^2.10.3"
+pyyaml = "^5.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.1.3"
@@ -29,7 +30,7 @@ pylint = "^2.4.1"
 tox = "^3.14"
 
 [tool.poetry.scripts]
-swarm-ctl = 'patroni_notifier.core:patroni_notify'
+patroni-notify = 'patroni_notifier.core:patroni_notify'
 
 [build-system]
 requires = ["poetry>=0.12"]
