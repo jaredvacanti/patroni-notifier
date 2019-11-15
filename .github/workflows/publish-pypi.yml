@@ -1,6 +1,9 @@
 name: Publish to PyPI
 
-on: [push]
+on:
+  push:
+    tags:
+    - '*'
 
 jobs:
   build:
@@ -16,7 +19,7 @@ jobs:
     - name: Cache Poetry Installation
       uses: actions/cache@v1
       with:
-        path: ~/.virtualenvs
+        path: /home/runner/.cache/pypoetry/virtualenvs
         key: pip-${{ hashFiles('**/poetry.lock') }}
         restore-keys: |
           pip-
@@ -28,9 +31,12 @@ jobs:
     # - name: Test With Tox
     #   run: |
     #     poetry run tox
-    # - name: Build with Poetry
-    #   run: |
-    #     poetry build
-    # - name: Publish to PyPI with Poetry
-    #   run: |
-    #     poetry publish
+    - name: Build with Poetry
+      run: |
+        poetry build
+    - name: Publish to PyPI with Poetry
+      env:
+        PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        poetry publish --username "$PYPI_USERNAME" --password "$PYPI_PASSWORD"
