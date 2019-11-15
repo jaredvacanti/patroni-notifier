@@ -38,7 +38,7 @@ class Mailer:
     def send_email(self, action, role, cluster_name):
         try:
             response = self.client.send_email(
-                Destination={"ToAddresses": [self.config.email_recipient,],},
+                Destination={"ToAddresses": [self.config["email_recipient"],],},
                 Message={
                     "Body": {
                         "Html": {
@@ -56,13 +56,14 @@ class Mailer:
                     },
                     "Subject": {
                         "Charset": self.charset,
-                        "Data": self.config.email_subject,
+                        "Data": self.config["email_subject"],
                     },
                 },
-                Source=self.config.email_sender,
+                Source=self.config["email_sender"],
                 # ConfigurationSetName=self.config_set,
             )
         except ClientError as e:
             click.echo(e.response["Error"]["Message"])
         else:
-            click.echo("Email sent! Message ID:", response["MessageId"])
+            msg_id = response["MessageId"]
+            click.echo(f"Email sent! Message ID: { msg_id }")

@@ -12,6 +12,8 @@
             "program": "${workspaceFolder}/.venv/bin/patroni-notify",
             "console": "integratedTerminal",
             "args": [
+                "--config",
+                "/home/jayjo/dev/patroni-notifier/patroni.yml",
                 "promote",
                 "manager",
                 "pg-cluster"
