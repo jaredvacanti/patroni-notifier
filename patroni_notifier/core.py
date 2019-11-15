@@ -1,26 +1,23 @@
-import os
-import socket
-import subprocess
-import socket
-import requests
-
 import click
-import requests
-import consul
-from patroni_notifier.mail import Mail
-
-c = consul.Consul()
-
-data = c.kv.get("services/pg-cluster")
+from patroni_notifier.mail import Mailer
 
 
 @click.command("patroni-notify", short_help="Send notification of a Patroni Event.")
-@click.pass_context
+@click.argument("action")
+@click.argument("role")
+@click.argument("cluster-name")
 @click.option(
-    "--config", default="patroni.yml", help="The patroni configuration to read from.",
+    "--config",
+    default="/config/patroni.yml",
+    help="The patroni configuration to read from.",
 )
-def patroni_notify(metastore_addr):
+@click.option(
+    "--metastore-addr",
+    default="consul",
+    help="The patroni configuration to read from.",
+)
+def patroni_notify(action, role, cluster_name, config, metastore_addr):
     """Query the metastore for relevant Patroni information and send notification"""
 
-    click.echo(metastore_addr)
-
+    mailer = Mailer(config, metastore_addr)
+    mailer.send_email(action, role, cluster_name)
