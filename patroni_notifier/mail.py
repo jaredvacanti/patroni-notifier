@@ -4,6 +4,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 import consul
 import click
 import yaml
+import datetime
 
 
 class Mailer:
@@ -28,7 +29,7 @@ class Mailer:
             except yaml.YAMLError as exc:
                 click.echo(exc)
 
-    def get_consul(self):
+    def get_consul_data(self):
         try:
             self.consul_data = self.consul_client.kv.get("services/pg-cluster")
         except Exception:
@@ -36,6 +37,8 @@ class Mailer:
 
     # sender, subject,
     def send_email(self, action, role, cluster_name):
+        self.get_consul_data()
+
         try:
             response = self.client.send_email(
                 Destination={"ToAddresses": [self.config["email_recipient"],],},
@@ -44,14 +47,18 @@ class Mailer:
                         "Html": {
                             "Charset": self.charset,
                             "Data": self.template_html.render(
-                                consul_data=self.consul_data
+                                consul_data=self.consul_data,
+                                servers=[],
+                                cluster_name=cluster_name,
+                                action=action,
+                                role=role,
+                                time=datetime.datetime.now(),
+                                dashboard_url=self.config["dashboard_url"],
                             ),
                         },
                         "Text": {
                             "Charset": self.charset,
-                            "Data": self.template_txt.render(
-                                consul_data=self.consul_data
-                            ),
+                            "Data": self.template_txt.render(),
                         },
                     },
                     "Subject": {

@@ -40,6 +40,10 @@ callbacks:
   on_start: /usr/local/bin/patroni-notify
   on_stop: /usr/local/bin/patroni-notify
 ```
+### Authentication
+
+Currently emails are sent using Amazon SES. Authenication can use IAM roles
+or you can place a `aws.env` in your home directory with credentials.
 
 ## Tests
 

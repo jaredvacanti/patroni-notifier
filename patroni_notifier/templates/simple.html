@@ -114,7 +114,7 @@
         h4 {
             color: #000000;
             font-family: sans-serif;
-            font-weight: 400;
+            font-weight: 600;
             line-height: 1.4;
             margin: 0;
             margin-bottom: 30px;
@@ -372,7 +372,28 @@
                                 <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td>
+                                            <h3><code>{{ cluster_name }}</code> event</h3>
+                                            <h4>{{ role }}: {{ action }} </h4>
+                                            <p>The node was up for {{ uptime }}</p>
 
+                                            {{ consul_data }}
+
+                                            <h4>Cluster State</h4>
+                                            <table>
+                                                <tr>
+                                                    <th>hostname</th>
+                                                    <th>role</th>
+                                                    <th>status</th>
+                                                </tr>
+                                                {% for server in servers %}
+                                                <tr>
+                                                    <td>{{ server['hostname'] }}</td>
+                                                    <td>{{ server['role'] }}</td>
+                                                    <td>{{ server['status'] }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </table>
+                                            <br>
                                             <table role="presentation" border="0" cellpadding="0" cellspacing="0"
                                                 class="btn btn-primary">
                                                 <tbody>
@@ -382,8 +403,9 @@
                                                                 cellspacing="0">
                                                                 <tbody>
                                                                     <tr>
-                                                                        <td> <a href="https://portal.ptbnl.io/ui/"
-                                                                                target="_blank">Check out Consul</a>
+                                                                        <td> <a href="{{ dashboard_url }}"
+                                                                                target="_blank">Go to Consul
+                                                                                Dashboard</a>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -392,7 +414,8 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            <p>The node was up for {{ uptime }}</p>
+
+                                            <p>Generated at: {{ time }}</p>
                                         </td>
                                     </tr>
                                 </table>
@@ -408,13 +431,15 @@
                         <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td class="content-block">
-                                    <span class="apple-link">Chicago IL 60654</span>
-                                    <br> Don't like these emails? <a href="mailto:info@ptbnl.io">Email the admin.</a>.
+                                    Don't like these emails? <a href="mailto:admin@ptbnl.io">Email the admin</a>
+                                    <br>
+                                    <span class="apple-link">Chicago, IL USA</span>
+
                                 </td>
                             </tr>
                             <tr>
                                 <td class="content-block powered-by">
-                                    Monitoring the <a href="https://ptbnl.io">PTBNL</a> backend services.
+                                    monitoring the <a href="https://ptbnl.io">PTBNL</a> backend services
                                 </td>
                             </tr>
                         </table>
