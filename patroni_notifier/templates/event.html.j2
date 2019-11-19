@@ -12,9 +12,17 @@
 {% block content %}
 
     <h3><code>{{ cluster_name }}</code> event</h3>
-    <small> Database system identifier: {{ database_id }} </small>
-    <h4>{{ role }}: {{ action }} </h4>
-    <p>The node was up for {{ uptime }}</p>
+
+    <p>
+      Database system identifier: {{ database_id }}
+      <br>
+      Host: {{ host }}
+      <br>
+      Role: {{ role.capitalize() }}
+      <br>
+      Action: {{ action.capitalize() }}
+    </p>
+    <p>The master LSN is at {{ optime }}</p>
 
     {% include 'cluster.html.j2' %}
 
@@ -39,6 +47,9 @@
             </tr>
         </tbody>
     </table>
+
+    {% include 'history.html.j2' %}
+    <br>
 
     <p>Generated at: {{ time }}</p>
 

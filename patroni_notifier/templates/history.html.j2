@@ -1,0 +1,18 @@
+<h4 style="margin-bottom:0px;">Timeline History:</h4>
+<hr style="margin-bottom:5px; margin-top:5px;">
+<table>
+    <tr>
+        <th>Timeline</th>
+        <th>Offset Position</th>
+        <th>Target</th>
+        <th>Promote Date</th>
+    </tr>
+    {% for timeline in history %}
+    <tr>
+        <td>{{ timeline[0] }}</td>
+        <td>{{ timeline[1] }}</td>
+        <td>{{ timeline[2] }}</td>
+        <td></td>
+    </tr>
+    {% endfor %}
+</table>
