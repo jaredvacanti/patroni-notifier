@@ -21,9 +21,12 @@ Patroni operations. You can further specify a config file location using
 
 **Required Settings in patroni.yml**
 ```
-email_sender: John Doe <example.com>
-email_recipient: test@example.com
-email_subject: Sample Subject
+patroni_notifier:
+  email_sender: John Doe <example.com>
+  email_recipient: test@example.com
+  email_subject: Sample Subject
+  logo_url: example-url
+  logo_link_url: 
 ```
 
 Patroni will send a notification on role change by invoking callback scripts 
@@ -40,6 +43,11 @@ callbacks:
   on_start: /usr/local/bin/patroni-notify
   on_stop: /usr/local/bin/patroni-notify
 ```
+
+Internally, `patroni-notifier` will parse the action to determine what template to use.
+Currently the five actions from patroni are supported, along with `bootstrap` 
+and `backup` actions.
+
 ### Authentication
 
 Currently emails are sent using Amazon SES. Authenication can use IAM roles

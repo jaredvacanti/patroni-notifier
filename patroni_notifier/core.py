@@ -19,5 +19,9 @@ from patroni_notifier.mail import Mailer
 def patroni_notify(action, role, cluster_name, config, metastore_addr):
     """Query the metastore for relevant Patroni information and send notification"""
 
-    mailer = Mailer(config, metastore_addr)
-    mailer.send_email(action, role, cluster_name)
+    mailer = Mailer(config, metastore_addr, cluster_name)
+
+    # current actions supported:
+    # patroni events (on_start, on_stop, on_reload, on_restart, on_role_change)
+    # bootstrap, backup
+    mailer.send_email(action, role)
