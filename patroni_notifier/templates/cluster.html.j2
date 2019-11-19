@@ -1,0 +1,25 @@
+<h4>Cluster State:</h4>
+<table>
+    <tr>
+        <th>Hostname</th>
+        <th>Role</th>
+        <th>State</th>
+        <th>Version</th>
+        <th>Timeline</th>
+        <th>Delay</th>
+    </tr>
+    {% for member in cluster_members %}
+    <tr>
+        <td>{{ member['hostname'] }}
+            {% if member['role'] == 'master' %}
+            <strong> ** </strong>
+            {% endif %}
+        </td>
+        <td>{{ member['role'] }}</td>
+        <td>{{ member['state'] }}</td>
+        <td>{{ member['version'] }}</td>
+        <td>{{ member['timeline'] }}</td>
+        <td>{{ member['delay'] }}</td>
+    </tr>
+    {% endfor %}
+</table>

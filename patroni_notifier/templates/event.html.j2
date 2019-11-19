@@ -1,0 +1,45 @@
+{% extends "base.html.j2" %}}
+
+{% block title %}
+  {{ title }}
+{% endblock %}
+
+
+{% block preheader %}
+    Database Node {{ hostname }} event: {{ action }}
+{% endblock %}
+
+{% block content %}
+
+    <h3><code>{{ cluster_name }}</code> event</h3>
+    <small> Database system identifier: {{ database_id }} </small>
+    <h4>{{ role }}: {{ action }} </h4>
+    <p>The node was up for {{ uptime }}</p>
+
+    {% include 'cluster.html.j2' %}
+
+    <br>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0"
+        class="btn btn-primary">
+        <tbody>
+            <tr>
+                <td align="left">
+                    <table role="presentation" border="0" cellpadding="0"
+                        cellspacing="0">
+                        <tbody>
+                            <tr>
+                                <td> <a href="{{ dashboard_url }}"
+                                        target="_blank">Go to Consul
+                                        Dashboard</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Generated at: {{ time }}</p>
+
+{% endblock %}}
