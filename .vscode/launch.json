@@ -15,7 +15,7 @@
                 "--config",
                 "${workspaceFolder}/patroni.yml",
                 "promote",
-                "manager",
+                "master",
                 "pg-cluster"
             ]
         }
