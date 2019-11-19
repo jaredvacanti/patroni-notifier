@@ -13,7 +13,7 @@
             "console": "integratedTerminal",
             "args": [
                 "--config",
-                "/home/jayjo/dev/patroni-notifier/patroni.yml",
+                "${workspaceFolder}/patroni.yml",
                 "promote",
                 "manager",
                 "pg-cluster"
