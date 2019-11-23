@@ -8,6 +8,7 @@ import datetime
 import ast
 import humanize
 import socket
+import dateutil.parser
 
 # ast.literal_eval(b"{'one': 1, 'two': 2}")
 
@@ -43,6 +44,10 @@ class Mailer:
 
         for obj in history:
             obj[1] = humanize.naturalsize(obj[1])
+            if len(obj) > 3:
+                obj[3] = dateutil.parser.parse(obj[3]).strftime(
+                    "%-m/%d/%Y %-I:%M %p %Z"
+                )
 
         self.history = history
 

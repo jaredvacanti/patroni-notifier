@@ -20,6 +20,7 @@ python-consul = "^1.1.0"
 jinja2 = "^2.10.3"
 pyyaml = "^5.1"
 humanize = "^0.5.1"
+python-dateutil = "^2.8"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.1.3"

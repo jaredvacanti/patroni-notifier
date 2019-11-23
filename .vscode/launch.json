@@ -18,6 +18,36 @@
                 "master",
                 "pg-cluster"
             ]
+        },
+        {
+            "name": "patroni-notify bootstrap",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${fileDirname}",
+            "program": "${workspaceFolder}/.venv/bin/patroni-notify",
+            "console": "integratedTerminal",
+            "args": [
+                "--config",
+                "${workspaceFolder}/patroni.yml",
+                "bootstrap",
+                "success",
+                "pg_cluster"
+            ]
+        },
+        {
+            "name": "patroni-notify backup",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${fileDirname}",
+            "program": "${workspaceFolder}/.venv/bin/patroni-notify",
+            "console": "integratedTerminal",
+            "args": [
+                "--config",
+                "${workspaceFolder}/patroni.yml",
+                "backup",
+                "cleanup_fail",
+                "pg_cluster"
+            ]
         }
     ]
 }
