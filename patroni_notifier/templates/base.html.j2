@@ -367,8 +367,11 @@
             <td class="container">
                 <div class="content">
                     <a href="{{ logo_link_url }}">
-                        <img src="{{ logo_url }}" alt="PTBNL logo" width="80" height="30" border="0"
-                            style="border:0; outline:none; text-decoration:none; display:block; margin:auto; padding-right:30px; margin-bottom:15px; margin-top:15px;">
+
+                        <img alt="Logo" width="80" height="30" border="0"
+                            style="border:0; outline:none; text-decoration:none; display:block; margin:auto; padding-right:30px; margin-bottom:15px; margin-top:15px;"
+                            src="data:image/png;charset=utf-8;base64, {{ logo | safe }}" >
+
                     </a>
 
                     <!-- START CENTERED WHITE CONTAINER -->

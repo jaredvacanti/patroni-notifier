@@ -1,25 +1,74 @@
-import click
+from patroni_notifier import click
 from patroni_notifier.mail import Mailer
+from patroni_notifier.config import CommandWithConfigFileHelper
+import yaml
 
 
-@click.command("patroni-notify", short_help="Send notification of a Patroni Event.")
-@click.argument("action")
+@click.command(
+    "patroni-notify",
+    short_help="Send notification of a Patroni Event.",
+    cls=CommandWithConfigFileHelper("config_file"),
+)
+@click.argument("action", help="The action.")
 @click.argument("role")
 @click.argument("cluster-name")
 @click.option(
-    "--config",
-    default="/config/patroni.yml",
-    help="The patroni configuration to read from.",
+    "--config-file",
+    type=click.Path(),
+    default="/etc/patroni.yml",
+    help="The path to the configuration file.",
+    show_default=True,
 )
 @click.option(
-    "--metastore-addr",
-    default="consul",
-    help="The patroni configuration to read from.",
+    "--metastore", default="consul", show_default=True, help="The DCS address.",
 )
-def patroni_notify(action, role, cluster_name, config, metastore_addr):
-    """Query the metastore for relevant Patroni information and send notification"""
+@click.option(
+    "--logo-url", show_default=True, help="The logo url.",
+)
+@click.option(
+    "--logo", type=click.Path(), help="The logo to be base64 encoded and embedded.",
+)
+@click.option(
+    "--email-sender",
+    type=click.STRING,
+    help="The email address to send notifications from.",
+    show_default=True,
+)
+@click.option(
+    "--email-recipient",
+    type=click.STRING,
+    help="The email address to recieve notifications.",
+    show_default=True,
+)
+def patroni_notify(
+    action,
+    role,
+    cluster_name,
+    config_file,
+    metastore,
+    logo_url,
+    logo,
+    email_sender,
+    email_recipient,
+):
+    """
+    Query the metastore for relevant Patroni information and send notification
+    """
 
-    mailer = Mailer(config, metastore_addr, cluster_name)
+    with open(config_file, "r") as stream:
+        try:
+            patroni_config = yaml.safe_load(stream)
+            config = patroni_config
+
+        except yaml.YAMLError as exc:
+            click.echo(exc)
+
+    config["logo"] = logo
+    config["logo_url"] = logo_url
+    config["email_sender"] = email_sender
+    config["email_recipient"] = email_recipient
+
+    mailer = Mailer(config, metastore, cluster_name)
 
     # current actions supported:
     # patroni events (on_start, on_stop, on_reload, on_restart, on_role_change)

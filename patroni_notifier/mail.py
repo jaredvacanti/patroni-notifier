@@ -2,22 +2,32 @@ import boto3
 from botocore.exceptions import ClientError
 from jinja2 import Environment, PackageLoader, select_autoescape
 import consul
-import click
-import yaml
+from patroni_notifier import click
 import datetime
+import base64
 import ast
 import humanize
 import socket
 import dateutil.parser
 
-# ast.literal_eval(b"{'one': 1, 'two': 2}")
-
 
 class Mailer:
-    def __init__(self, config, metastore_addr, cluster_name):
+    def __init__(self, config, metastore, cluster_name):
+
+        self.cluster_members = [{}]
+        self.cluster_name = cluster_name
+        self.host = socket.gethostbyname(socket.gethostname())
+        self.config = config
+
+        self.config["logo_b64"] = self.encode_image(self.config["logo"])
+
+        if metastore != "consul":
+            raise NotImplementedError
+        else:
+            self.consul_client = consul.Consul()
+
         self.charset = "UTF-8"
         self.aws_region = "us-east-1"
-        self.consul_client = consul.Consul()
         self.client = boto3.client("ses", region_name=self.aws_region)
         self.jinja_env = Environment(
             loader=PackageLoader("patroni_notifier", "templates"),
@@ -25,18 +35,12 @@ class Mailer:
         )
         self.template_html = self.jinja_env.get_template("event.html.j2")
         self.template_txt = self.jinja_env.get_template("simple.txt")
-        self.cluster_members = [{}]
-        self.cluster_name = cluster_name
-        self.host = socket.gethostbyname(socket.gethostname())
         # self.config_set = 'ConfigSet'
 
-        with open(config, "r") as stream:
-            try:
-                patroni_config = yaml.safe_load(stream)
-                self.config = patroni_config["patroni_notifier"]
-
-            except yaml.YAMLError as exc:
-                click.echo(exc)
+    def encode_image(self, filename):
+        encoded = base64.b64encode(open(filename, "rb").read()).decode("utf-8")
+        print(encoded)
+        return encoded
 
     def get_history(self):
         history = self.consul_client.kv.get(f"service/{self.cluster_name}/history")
@@ -87,42 +91,64 @@ class Mailer:
     def send_email(self, action, role):
         self.get_cluster_info()
 
+        msg = MIMEMultipart("mixed")
+
+        msg["From"] = self.config["email_sender"]
+        msg["To"] = self.config["email_recipient"]
+        msg["Subject"] = f"{action.upper()} event - {role}@{self.host}"
+
         time = datetime.datetime.now().strftime("%-m/%d/%Y %-I:%M %p")
-        subject = f"{action.upper()} event - {role}@{self.host}"
+
+        message_alternative = MIMEMultipart("alternative")
+        message_related = MIMEMultipart("related")
+
+        message_related.attach(MIMEText(msgHtml, "html"))
+        message_alternative.attach(MIMEText(msgPlain, "plain"))
+        message_alternative.attach(message_related)
+
+        message.attach(message_alternative)
+
+        filename = os.path.basename(attachmentFile)
+        msg.add_header("Content-Disposition", "attachment", filename=filename)
+        message.attach(msg)
+
+        msg.set_content(self.template_txt.render())
+
+        image_cid = make_msgid(domain="xyz.com")
+        msg.add_alternative(
+            self.template_html.render(
+                cluster_members=self.cluster_members,
+                cluster_name=self.cluster_name,
+                history=self.history,
+                action=action,
+                role=role,
+                time=time,
+                host=self.host,
+                optime=self.optime_fmtd,
+                database_id=self.database_id,
+                dashboard_url=self.config["dashboard_url"],
+                logo_url=self.config["logo_url"],
+                image_cid=image_cid[1:-1],
+            ),
+            subtype="html",
+        )
+
+        with open("path/to/image.jpg", "rb") as img:
+            maintype, subtype = mimetypes.guess_type(img.name)[0].split("/")
+            msg.get_payload()[1].add_related(
+                img.read(), maintype=maintype, subtype=subtype, cid=image_cid
+            )
 
         try:
-            response = self.client.send_email(
-                Destination={"ToAddresses": [self.config["email_recipient"],],},
-                Message={
-                    "Body": {
-                        "Html": {
-                            "Charset": self.charset,
-                            "Data": self.template_html.render(
-                                cluster_members=self.cluster_members,
-                                cluster_name=self.cluster_name,
-                                history=self.history,
-                                action=action,
-                                role=role,
-                                time=time,
-                                host=self.host,
-                                optime=self.optime_fmtd,
-                                database_id=self.database_id,
-                                dashboard_url=self.config["dashboard_url"],
-                                logo_url=self.config["logo_url"],
-                            ),
-                        },
-                        "Text": {
-                            "Charset": self.charset,
-                            "Data": self.template_txt.render(),
-                        },
-                    },
-                    "Subject": {"Charset": self.charset, "Data": subject,},
-                },
+            response = self.client.send_raw_email(
                 Source=self.config["email_sender"],
-                # ConfigurationSetName=self.config_set,
+                Destinations={"ToAddresses": [self.config["email_recipient"],],},
+                RawMessage={"Data": msg.as_string(),},
             )
+
         except ClientError as e:
             click.echo(e.response["Error"]["Message"])
         else:
             msg_id = response["MessageId"]
             click.echo(f"Email sent! Message ID: { msg_id }")
+
