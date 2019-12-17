@@ -5,14 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "patroni-notify",
+            "name": "notify",
             "type": "python",
             "request": "launch",
             "cwd": "${fileDirname}",
             "program": "${workspaceFolder}/.venv/bin/patroni-notify",
             "console": "integratedTerminal",
             "args": [
-                "--config",
+                "--config-file",
                 "${workspaceFolder}/patroni.yml",
                 "promote",
                 "master",
@@ -20,14 +20,14 @@
             ]
         },
         {
-            "name": "patroni-notify bootstrap",
+            "name": "bootstrap",
             "type": "python",
             "request": "launch",
             "cwd": "${fileDirname}",
             "program": "${workspaceFolder}/.venv/bin/patroni-notify",
             "console": "integratedTerminal",
             "args": [
-                "--config",
+                "--config-file",
                 "${workspaceFolder}/patroni.yml",
                 "bootstrap",
                 "success",
@@ -35,18 +35,31 @@
             ]
         },
         {
-            "name": "patroni-notify backup",
+            "name": "backup",
             "type": "python",
             "request": "launch",
             "cwd": "${fileDirname}",
             "program": "${workspaceFolder}/.venv/bin/patroni-notify",
             "console": "integratedTerminal",
             "args": [
-                "--config",
+                "--config-file",
                 "${workspaceFolder}/patroni.yml",
                 "backup",
                 "cleanup_fail",
                 "pg_cluster"
+            ]
+        },
+        {
+            "name": "help",
+            "type": "python",
+            "request": "launch",
+            "cwd": "${fileDirname}",
+            "program": "${workspaceFolder}/.venv/bin/patroni-notify",
+            "console": "integratedTerminal",
+            "args": [
+                "--config-file",
+                "${workspaceFolder}/patroni.yml",
+                "--help"
             ]
         }
     ]
