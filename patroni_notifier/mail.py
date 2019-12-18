@@ -9,6 +9,9 @@ import ast
 import humanize
 import socket
 import dateutil.parser
+import mimetypes
+from email.message import EmailMessage
+from email.utils import make_msgid
 
 
 class Mailer:
@@ -39,7 +42,7 @@ class Mailer:
 
     def encode_image(self, filename):
         encoded = base64.b64encode(open(filename, "rb").read()).decode("utf-8")
-        print(encoded)
+
         return encoded
 
     def get_history(self):
@@ -87,11 +90,10 @@ class Mailer:
             self.cluster_members = []
             self.database_id = ""
 
-    # sender, subject,
     def send_email(self, action, role):
         self.get_cluster_info()
 
-        msg = MIMEMultipart("mixed")
+        msg = EmailMessage()
 
         msg["From"] = self.config["email_sender"]
         msg["To"] = self.config["email_recipient"]
@@ -99,22 +101,9 @@ class Mailer:
 
         time = datetime.datetime.now().strftime("%-m/%d/%Y %-I:%M %p")
 
-        message_alternative = MIMEMultipart("alternative")
-        message_related = MIMEMultipart("related")
-
-        message_related.attach(MIMEText(msgHtml, "html"))
-        message_alternative.attach(MIMEText(msgPlain, "plain"))
-        message_alternative.attach(message_related)
-
-        message.attach(message_alternative)
-
-        filename = os.path.basename(attachmentFile)
-        msg.add_header("Content-Disposition", "attachment", filename=filename)
-        message.attach(msg)
-
         msg.set_content(self.template_txt.render())
 
-        image_cid = make_msgid(domain="xyz.com")
+        image_cid = make_msgid(domain="ptbnl.io")
         msg.add_alternative(
             self.template_html.render(
                 cluster_members=self.cluster_members,
@@ -128,12 +117,12 @@ class Mailer:
                 database_id=self.database_id,
                 dashboard_url=self.config["dashboard_url"],
                 logo_url=self.config["logo_url"],
-                image_cid=image_cid[1:-1],
+                logo_cid=image_cid[1:-1],
             ),
             subtype="html",
         )
 
-        with open("path/to/image.jpg", "rb") as img:
+        with open(self.config["logo"], "rb") as img:
             maintype, subtype = mimetypes.guess_type(img.name)[0].split("/")
             msg.get_payload()[1].add_related(
                 img.read(), maintype=maintype, subtype=subtype, cid=image_cid
@@ -142,7 +131,7 @@ class Mailer:
         try:
             response = self.client.send_raw_email(
                 Source=self.config["email_sender"],
-                Destinations={"ToAddresses": [self.config["email_recipient"],],},
+                Destinations=[self.config["email_recipient"],],
                 RawMessage={"Data": msg.as_string(),},
             )
 
@@ -151,4 +140,3 @@ class Mailer:
         else:
             msg_id = response["MessageId"]
             click.echo(f"Email sent! Message ID: { msg_id }")
-
