@@ -13,10 +13,10 @@
             "console": "integratedTerminal",
             "args": [
                 "--config-file",
-                "${workspaceFolder}/patroni.yml",
+                "${workspaceFolder}/tests/patroni_test.yml",
                 "promote",
                 "master",
-                "pg-cluster"
+                "test-cluster"
             ]
         },
         {
@@ -28,10 +28,10 @@
             "console": "integratedTerminal",
             "args": [
                 "--config-file",
-                "${workspaceFolder}/patroni.yml",
+                "${workspaceFolder}/tests/patroni_test.yml",
                 "bootstrap",
                 "success",
-                "pg_cluster"
+                "test-cluster"
             ]
         },
         {
@@ -43,10 +43,10 @@
             "console": "integratedTerminal",
             "args": [
                 "--config-file",
-                "${workspaceFolder}/patroni.yml",
+                "${workspaceFolder}/tests/patroni_test.yml",
                 "backup",
                 "cleanup_fail",
-                "pg_cluster"
+                "test-cluster"
             ]
         },
         {
@@ -58,7 +58,7 @@
             "console": "integratedTerminal",
             "args": [
                 "--config-file",
-                "${workspaceFolder}/patroni.yml",
+                "${workspaceFolder}/tests/patroni_test.yml",
                 "--help"
             ]
         }
