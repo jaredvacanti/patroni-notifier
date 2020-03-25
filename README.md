@@ -7,51 +7,82 @@
 This is a simple command line program to send templated emails from AWS SES in response
 to Patroni database events.
 
-## Installation
+## Suppoted Actions
+
+action | description | options
+--- | --- | ---
+reload | dbname and why it reloaded | 
+restart | test |
+role_change | test |
+start | stop |
+stop | test1 |
+backup | testing | `patroni-notify backup --time=<time> --size=<size> --filename=<filename>`
+
+
+
+# Quick Start
+
+### Installation
 
 ```
 pip install patroni-notifier
 ```
 
-## Usage
+Currently emails are sent using Amazon SES. Authenication can use IAM roles
+or you can place a `aws.env` in your home directory with credentials.
+
+
+### Configuration
 
 System-wide configurations are done in the `patroni.yml` file required for 
 Patroni operations. You can further specify a config file location using 
 `--config` as a command line option, which defaults to `/config/patroni.yml`.
 
-**Required Settings in patroni.yml**
+
+**Required Settings** in patroni.yml:
+
 ```
+postgresql:
+  callbacks:
+    on_reload: /usr/local/bin/patroni-notify
+    on_restart: /usr/local/bin/patroni-notify
+    on_role_change: /usr/local/bin/patroni-notify
+    on_start: /usr/local/bin/patroni-notify
+    on_stop: /usr/local/bin/patroni-notify
+
 patroni_notifier:
   email_sender: John Doe <example.com>
   email_recipient: test@example.com
   email_subject: Sample Subject
+  dashboard_url: http://example.com/dashboard/
   logo_url: example-url
-  logo_link_url: 
+  logo_link_url: http://www.example.com
 ```
 
-Patroni will send a notification on role change by invoking callback scripts 
-to run on certain actions. Patroni will pass the action, role and cluster name.
+Patroni invokes callback scripts to run on certain database events. 
+Patroni will pass the action, role and cluster name. Internally,
+`patroni-notifier` will parse the action to determine what html template
+to use.
 
-The program is then run like `patroni-notify ACTION ROLE CLUSTER_NAME`. Add this
-snippet to your `patroni.yml`:
 
-```
-callbacks:
-  on_reload: /usr/local/bin/patroni-notify
-  on_restart: /usr/local/bin/patroni-notify
-  on_role_change: /usr/local/bin/patroni-notify
-  on_start: /usr/local/bin/patroni-notify
-  on_stop: /usr/local/bin/patroni-notify
-```
+# Development
 
-Internally, `patroni-notifier` will parse the action to determine what template to use.
-Currently the five actions from patroni are supported, along with `bootstrap` 
-and `backup` actions.
+In order to access the Distributed Configuration Storage (DCS), the S3
+backups, and the access rights to send test emails from SES, the test
+environment needs to run on an EC2 instance or be provided with the correct
+roles.
 
-### Authentication
+- VSCode SSH Remote Login
+- `git clone https://github.com/jaredvacanti/patroni-notifier.git`
+- `cd patroni-notifier`
+- `sudo apt-get install python3-venv`
+- `python3 -m venv .venv`
+- `. .venv/bin/activate`
+- `pip install --upgrade pip`
+- `pip install poetry`
+- `poetry install`
+- Install Remote Python Debugger (VSCode Extension)
 
-Currently emails are sent using Amazon SES. Authenication can use IAM roles
-or you can place a `aws.env` in your home directory with credentials.
 
 ## Tests
 
@@ -63,7 +94,7 @@ poetry run tox
 
 MIT License
 
-Copyright (c) 2019
+Copyright (c) 2019-2020
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
