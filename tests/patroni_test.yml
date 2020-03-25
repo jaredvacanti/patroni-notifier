@@ -1,0 +1,7 @@
+patroni_notifier:
+  email_sender: Patroni Database Event <monitor@example.com>
+  email_recipient: test@example.com
+  email_subject: Testing AWS Email from Boto3
+  dashboard_url: http://example.com/dashboard/
+  logo_url: https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Python_logo_and_wordmark.svg/250px-Python_logo_and_wordmark.svg.png
+  logo_link_url: http://example.com
