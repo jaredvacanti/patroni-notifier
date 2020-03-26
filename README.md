@@ -7,16 +7,16 @@
 This is a simple command line program to send templated emails from AWS SES in response
 to Patroni database events.
 
-## Suppoted Actions
+## Supported Actions
 
-action | description | options
---- | --- | ---
-reload | dbname and why it reloaded | 
-restart | test |
-role_change | test |
-start | stop |
-stop | test1 |
-backup | testing | `patroni-notify backup --time=<time> --size=<size> --filename=<filename>`
+action | description
+--- | ---
+reload | reconfigure a running database 
+restart | `-HUP` sent to main process
+role_change | promotions from replica to master
+start | start postgresql process
+stop | stop/pause postgresql process
+backup | backup and upload to s3 
 
 
 
