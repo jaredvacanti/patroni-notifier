@@ -1,0 +1,30 @@
+{% for lb in load_balancers %}
+
+    <h4 style="margin-bottom:0px;">HAProxy Stats:</h4>
+    <hr style="margin-bottom:5px; margin-top:5px;">
+    <table>
+        <tr>
+            <th>Hostname</th>
+            <th>Role</th>
+            <th>State</th>
+            <th>Version</th>
+            <th>Timeline</th>
+            <th>Delay</th>
+        </tr>
+        {% for lb in load_balancers %}
+        <tr>
+            <td>{{ lb['hostname'] }}
+                {% if lb['role'] == 'master' %}
+                <strong> ** </strong>
+                {% endif %}
+            </td>
+            <td>{{ lb['role'] }}</td>
+            <td>{{ lb['state'] }}</td>
+            <td>{{ lb['version'] }}</td>
+            <td>{{ lb['timeline'] }}</td>
+            <td>{{ lb['delay'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endfor %}
