@@ -40,6 +40,9 @@ import yaml
     help="The email address to recieve notifications.",
     show_default=True,
 )
+@click.option(
+    "--haproxy-addr", show_default=True, help="The HAProxy TCP load-balancer address.",
+)
 def patroni_notify(
     action,
     role,
@@ -50,6 +53,7 @@ def patroni_notify(
     logo,
     email_sender,
     email_recipient,
+    haproxy_addr,
 ):
     """
     Query the metastore for relevant Patroni information and send notification
@@ -58,15 +62,22 @@ def patroni_notify(
     with open(config_file, "r") as stream:
         try:
             patroni_config = yaml.safe_load(stream)
-            config = patroni_config
+            config = patroni_config["patroni_notifier"]
 
         except yaml.YAMLError as exc:
             click.echo(exc)
 
-    config["logo"] = logo
-    config["logo_url"] = logo_url
-    config["email_sender"] = email_sender
-    config["email_recipient"] = email_recipient
+    if logo:
+        config["logo"] = logo
+
+    if logo_url:
+        config["logo_url"] = logo_url
+
+    if email_sender:
+        config["email_sender"] = email_sender
+
+    if email_recipient:
+        config["email_recipient"] = email_recipient
 
     mailer = Mailer(config, metastore, cluster_name)
 
