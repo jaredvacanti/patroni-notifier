@@ -32,6 +32,26 @@ Currently emails are sent using Amazon SES. Authenication can use IAM roles
 or you can place a `aws.env` in your home directory with credentials.
 
 
+```
+Usage: patroni-notify <action> <role> <cluster_name> [OPTIONS]
+
+  Query the metastore for relevant Patroni information and send notification
+
+Arguments:
+  action: <action>  The action.  [required]
+
+[OPTIONS]:
+  --config-file PATH      The path to the configuration file.  [default:
+                          /etc/patroni.yml]
+  --metastore TEXT        The DCS address.  [default: consul]
+  --logo-url TEXT         The logo url.
+  --logo PATH             The logo to be base64 encoded and embedded.
+  --email-sender TEXT     The email address to send notifications from.
+  --email-recipient TEXT  The email address to recieve notifications.
+  --haproxy-addr TEXT     The HAProxy TCP load-balancer address.
+  -h, --help              Show this message and exit.
+```
+
 ### Configuration
 
 System-wide configurations are done in the `patroni.yml` file required for 
