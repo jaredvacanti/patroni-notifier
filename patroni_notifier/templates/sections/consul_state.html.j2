@@ -1,0 +1,48 @@
+<h4 style="margin-bottom:0px;">Consul Cluster State:</h4>
+<hr style="margin-bottom:5px; margin-top:5px;">
+<table>
+    <tr class="cell-left">
+        <th>Hostname</th>
+        <th>Role</th>
+        <th>State</th>
+        <th>Version</th>
+        <th>Timeline</th>
+        <th>Delay</th>
+    </tr>
+    {% for member in cluster_members %}
+    <tr>
+        <td>{{ member['hostname'] }}
+            {% if member['role'] == 'master' %}
+            <strong> ** </strong>
+            {% endif %}
+        </td>
+        <td>{{ member['role'] }}</td>
+        <td>{{ member['state'] }}</td>
+        <td>{{ member['version'] }}</td>
+        <td>{{ member['timeline'] }}</td>
+        <td>{{ member['delay'] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0"
+    class="btn btn-primary">
+    <tbody>
+        <tr>
+            <td align="left">
+                <table role="presentation" border="0" cellpadding="0"
+                    cellspacing="0">
+                    <tbody>
+                        <tr>
+                            <td> <a href="{{ dashboard_url }}"
+                                    target="_blank">Go to Consul
+                                    Dashboard &#8599; </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>

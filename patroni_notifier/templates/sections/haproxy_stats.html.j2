@@ -1,0 +1,55 @@
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th colspan="2"
+                class="cell-bottom-underline">Bytes</th>
+            <th></th>
+            <th></th>
+            <th colspan="2"
+                class="cell-bottom-underline">Sessions</th>
+        </tr>
+        <tr>
+            <th class="cell-left">Status</th>
+            <th class="cell-left">Downtime</th>
+            <th>In</th>
+            <th>Out</th>
+            <th>Errors</th>
+            <th>Requests</th>
+            <th>Current</th>
+            <th>Max</th>
+        </tr>
+    </thead>
+
+    <tbody class="cell-center">
+
+    {% for lb in load_balancers %}
+        <span class="content-block">
+
+            {% for backend in lb['backends'] %}
+                    <tr>
+                        <td class="cell-left" title="{{ backend['name'] }}">{{ backend['status'] }}</td>
+                        <td class="cell-left">{{ backend['downtime'] | naturaltime }}</td>
+                        <td>{{ backend['bin'] | naturalsize }}</td>
+                        <td>{{ backend['bout'] | naturalsize }}</td>
+                        <td>{{ backend['econ'] }}</td>
+                        <td>{{ backend['lbtot'] }}</td>
+                        <td>{{ backend['scur'] }}</td>
+                        <td>{{ backend['smax'] }}</td>
+                    </tr>
+            {% endfor %}
+
+            <tr class="frontend">
+                <td class="cell-left strong" colspan="2">{{ lb['frontend'].name }}</td>
+                <td>{{ lb['frontend'].bin | naturalsize }}</td>
+                <td>{{ lb['frontend'].bout | naturalsize }}</td>
+            </tr>
+        </span>
+
+    {% endfor %}
+
+    </tbody>
+</table>
+
+<br>
