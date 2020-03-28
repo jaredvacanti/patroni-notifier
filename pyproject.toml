@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "patroni-notifier"
-version = "0.0.3"
+version = "0.0.4"
 description = "Patoni notification system using jinja2 templates"
 authors = ["Jared Vacanti <jaredvacanti@gmail.com>"]
 license = "MIT"
