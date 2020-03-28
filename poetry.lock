@@ -213,6 +213,17 @@ pyflakes = ">=2.1.0,<2.2.0"
 
 [[package]]
 category = "main"
+description = "Library for collecting and parsing HAProxy server stats"
+name = "haproxy-stats"
+optional = false
+python-versions = "*"
+version = "1.5"
+
+[package.dependencies]
+requests = ">=2.6.2"
+
+[[package]]
+category = "main"
 description = "python humanize utilities"
 name = "humanize"
 optional = false
@@ -503,6 +514,14 @@ version = "0.4.15"
 
 [[package]]
 category = "main"
+description = "World timezone definitions, modern and historical"
+name = "pytz"
+optional = false
+python-versions = "*"
+version = "2019.3"
+
+[[package]]
+category = "main"
 description = "YAML parser and emitter for Python"
 name = "pyyaml"
 optional = false
@@ -674,7 +693,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "contextlib2", "unittest2"]
 
 [metadata]
-content-hash = "5344af48d5267fc64060c4e080dcc828005995e609400fc492d2d7d7d3ff96b7"
+content-hash = "11a4c4c86e3313518bcdd02d977e02363e0097a364271a19f1517e88f5ae453e"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -790,6 +809,10 @@ filelock = [
 flake8 = [
     {file = "flake8-3.7.9-py2.py3-none-any.whl", hash = "sha256:49356e766643ad15072a789a20915d3c91dc89fd313ccd71802303fd67e4deca"},
     {file = "flake8-3.7.9.tar.gz", hash = "sha256:45681a117ecc81e870cbf1262835ae4af5e7a8b08e40b944a8a6e6b895914cfb"},
+]
+haproxy-stats = [
+    {file = "haproxy-stats-1.5.tar.gz", hash = "sha256:cabad21a739a3e7e5906d824438a8cac0a8a3b1ce1793a08b577b9c261f10688"},
+    {file = "haproxy_stats-1.5-py2.py3-none-any.whl", hash = "sha256:1ef414150e0ad7d51ade24d8262ba589e2bd65456e926983b230edb26c86bc93"},
 ]
 humanize = [
     {file = "humanize-0.5.1.tar.gz", hash = "sha256:a43f57115831ac7c70de098e6ac46ac13be00d69abbf60bdcac251344785bb19"},
@@ -968,6 +991,10 @@ python-dateutil = [
 python-magic = [
     {file = "python-magic-0.4.15.tar.gz", hash = "sha256:f3765c0f582d2dfc72c15f3b5a82aecfae9498bd29ca840d72f37d7bd38bfcd5"},
     {file = "python_magic-0.4.15-py2.py3-none-any.whl", hash = "sha256:f2674dcfad52ae6c49d4803fa027809540b130db1dec928cfbb9240316831375"},
+]
+pytz = [
+    {file = "pytz-2019.3-py2.py3-none-any.whl", hash = "sha256:1c557d7d0e871de1f5ccd5833f60fb2550652da6be2693c1e02300743d21500d"},
+    {file = "pytz-2019.3.tar.gz", hash = "sha256:b02c06db6cf09c12dd25137e563b31700d3b80fcc4ad23abb7a315f2789819be"},
 ]
 pyyaml = [
     {file = "PyYAML-5.1.2-cp27-cp27m-win32.whl", hash = "sha256:5124373960b0b3f4aa7df1707e63e9f109b5263eca5976c66e08b1c552d4eaf8"},
