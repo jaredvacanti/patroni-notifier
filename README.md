@@ -57,6 +57,11 @@ patroni_notifier:
   dashboard_url: http://example.com/dashboard/
   logo_url: example-url
   logo_link_url: http://www.example.com
+  haproxy:
+    address: 10.0.1.139:9001
+    load_balancers:
+      master_postgresql: backend_master
+      replicas_postgresql: backend_replicas
 ```
 
 Patroni invokes callback scripts to run on certain database events. 
